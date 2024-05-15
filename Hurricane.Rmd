@@ -1,0 +1,212 @@
+---
+title: "Hurricane Code"
+output: 
+  pdf_document: default
+  html_document: default
+date: "2024-05-09"
+---
+
+```{r}
+# libraries installed
+library(tidyverse)
+
+theme_set(theme_bw()) # optional
+
+# dataset storms
+storms
+```
+
+# Sections
+
+### Section 1: Frequency of status types among the years
+
+notes:
+
+1)  Tropical storms are the most frequent type while tropical wave is least frequent
+
+```{r}
+
+storms %>% 
+  rename(Classifications = status)  %>% 
+  ggplot(aes(year)) + geom_bar(aes(fill = Classifications), position = "fill", alpha = 0.9) + theme_bw() +
+  theme(legend.background = element_rect(fill = "white", linetype = "solid", color = "black")) +
+  labs(title = "Different Classifications types by Year",
+       subtitle = "Percentage of Different Storms by Year",
+       x = "Years",
+       y = "")
+
+# Total count of each status 
+
+storms %>% 
+  count(status, sort = TRUE)
+  
+
+```
+
+### Section 2: Difference of latitude among different status
+
+notes:
+
+1)  Tropical waves appear to have the least variation among others.
+2)  Extratropical appears to have the highest variation among the others.
+
+```{r}
+
+# Graph
+storms %>% 
+ggplot(aes(x = lat)) + geom_density(aes(color = status, fill = status), alpha = 0.2) +
+  labs(title = "Difference of Latitude",
+       subtitle = "Among Different Storm Classifications",
+       x = "Latitude",
+       y = "Density")
+
+# By status
+storms %>% 
+  ggplot(aes(x = lat, color = status)) + geom_density(aes(fill = status), alpha = 0.2) + facet_wrap(~status, nrow = 3) +
+  labs(title = "Additional Latitude Visualization",
+       subtitle = "Among Different Storm Status",
+       x = "Latitude",
+       y = "Density") 
+
+# Shows mean and variance on lat for each status
+storms %>% 
+  group_by(status) %>% 
+  summarise(mean_lat = mean(lat),
+            sd_lat = sd(lat),
+            var_lat = var(lat))
+
+```
+
+### Section 3: Difference of longitude among different storm classfications
+
+```{r}
+
+# graph
+ggplot(storms, aes(x = long, color = status)) + geom_density(aes(fill = status), alpha = 0.2) + theme_bw()
+
+# By status
+ggplot(storms, aes(x = long, color = status)) + geom_density(aes(fill = status), alpha = 0.3) + facet_wrap(~status, nrow = 3) 
+
+# Table that shows mean and variance for long on each status
+storms %>% 
+  group_by(status) %>% 
+  summarise(mean_long= mean(long),
+            sd_long = sd(long),
+            var_long = var(long))
+
+```
+
+### Section 4: Wind
+
+Notes:
+
+1)  Wind is right skewed.
+2)  Hurricanes have the highest mean for wind speeds while other low has the lowest.
+
+```{r}
+
+# Wind across all years
+storms %>% 
+  ggplot(aes(wind)) + geom_density(aes(fill = "red"), alpha = 0.7) + theme_bw()
+
+# Wind by status
+storms %>% 
+  ggplot(aes(wind)) + geom_density(aes(color = status, fill = status), alpha = 0.3) + facet_wrap(~status) 
+
+# Wind by status in one graph
+storms %>% 
+  ggplot(aes(wind)) + geom_density(aes(color = status, fill = status), alpha = 0.2)
+
+# Box plots for different status types
+storms %>% 
+  mutate(status = fct_reorder(status,wind)) %>% 
+  ggplot(aes(wind, status)) + geom_boxplot(aes(fill = status), outlier.size = 0.5) + 
+  theme_bw() +
+  labs(
+    title = "Box and Whisker Plots for Wind",
+        subtitle = "Among Storm Classifications",
+        x = "Wind",
+        y = "Classifications"
+  )
+
+# Table that displays the mean and variance on wind for each status
+storms %>% 
+  group_by(status) %>% 
+  summarise(mean_wind = mean(wind),
+            sd_wind = sd(wind),
+            var_wind = var(wind))
+
+
+
+
+
+```
+
+### Section 5: Pressure
+
+Notes:
+
+1)  Pressure is left skewed
+2)  The mean for pressure is very close among: Disturbance, other low, subtropical depression, tropical depression and tropical wave
+
+```{r}
+
+# Pressure across all years
+storms %>% 
+  ggplot() + geom_density(aes(pressure), fill = "blue", alpha = 0.5) + theme_bw()
+
+# By status
+storms %>% 
+  ggplot() + geom_density(aes(pressure, color = status, fill = status), alpha = 0.5) + facet_wrap(~status)
+
+# All in one graph
+storms %>% 
+  ggplot() + geom_density(aes(pressure, color = status, fill = status), alpha = 0.3)
+
+# Box plots for different status types
+storms %>% 
+  rename(Classification = status) %>% 
+  filter(pressure > 920) %>% 
+ggplot(aes(pressure, Classification)) + geom_boxplot(aes(fill = Classification), outlier.size = -3) + labs(
+        title = "Box and Whisker Plots for Pressure",
+        subtitle = "Among Storm Classifications",
+        x = "Pressure",
+        y = "Classifications"
+)
+
+
+# Table that displays the mean and variance on pressure for each status
+storms %>% 
+  group_by(status) %>% 
+  summarise(mean_pressure = mean(pressure),
+            sd_pressure = sd(pressure),
+            var_pressure = var(pressure))
+
+
+
+
+```
+
+### Graph 10: Pressure vs. Wind by Status
+
+```{r}
+
+# Visual
+storms %>% 
+  group_by(status) %>% 
+  rename(Category = category) %>% 
+  ggplot(aes(pressure,wind)) + 
+  geom_point(aes(color = Category)) + 
+  geom_jitter(aes(color = Category)) +
+  theme(legend.background = element_rect(fill = "lightblue", linetype = "solid", color = "black")) + 
+  theme(legend.position = "top") +
+  geom_smooth(color = "red") +
+  facet_wrap(~status, nrow = 3) +
+  labs(title = "Pressure vs. Wind",
+       subtitle = "Through 1975-2020",
+       x = "Pressure in Millibars",
+       y = "Wind in Knots")
+
+  
+
+```
