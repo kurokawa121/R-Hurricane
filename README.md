@@ -1,6 +1,6 @@
 # Hurricane Visualization Project with R
 
-![Hurricane Visualization](hurricane_visualization.gif)
+![Hurricane Visualization](hurricane-gif-icegif-8.gif)
 
 ## Overview
 
