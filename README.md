@@ -14,9 +14,8 @@ The data can be accessed by installing the tidyverse package and accessing the s
 
 - **Frequency Analysis**: Utilized statistical methods to identify frequency types for different hurricane classifications, revealing insights into the distribution of storm types over time.
 - **Latitude Comparison**: Created visualizations to compare the differences in latitude among various hurricanes, shedding light on geographical patterns and preferences for hurricane formation.
-- **Longitude Variation**: Conducted analysis on the differences in longitude among different storm classifications, uncovering potential correlations between storm trajectories and geographical regions.
+- **Longitude Comparison**: Conducted analysis on the differences in longitude among different storm classifications, uncovering potential correlations between storm trajectories and geographical regions.
 - **Wind Speed and Pressure Analysis**: Employed statistical techniques to analyze variations in wind speeds and pressures associated with different hurricane types, providing insights into storm intensity and characteristics.
-- **Comprehensive Comparison**: Generated comprehensive visualizations to compare wind speeds, pressures, and other attributes across all hurricanes in the dataset, enabling a holistic understanding of hurricane behavior and patterns.
 
 ## Usage
 
